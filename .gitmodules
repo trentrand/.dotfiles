@@ -4,3 +4,6 @@
 [submodule "/Users/trand/.dotfiles/plugins/zsh/zsh-vim-mode"]
 	path = /Users/trand/.dotfiles/plugins/zsh/zsh-vim-mode
 	url = https://github.com/softmoth/zsh-vim-mode.git
+[submodule ".dotfiles/plugins/zsh/pure"]
+	path = .dotfiles/plugins/zsh/pure
+	url = https://github.com/sindresorhus/pure.git
