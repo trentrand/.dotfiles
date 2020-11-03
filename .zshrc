@@ -91,10 +91,25 @@ export DRONE_TOKEN=$(security find-generic-password -a ${DEFAULT_USER} -s DRONE_
 # Grant larger memory allocation limit to NodeJS
 export NODE_OPTIONS=--max_old_space_size=8192
 
+# GNU Bin Utils
+PATH=/usr/local/opt/binutils/bin:$PATH
+PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
+export LDFLAGS="-L/usr/local/opt/binutils/lib"
+export CPPFLAGS="-I/usr/local/opt/binutils/include"
+
 # iOS jailbreak development tool: https://github.com/theos/theos
 export THEOS=/opt/theos
 export PATH=$THEOS/bin:$PATH
 export THEOS_DEVICE_IP=Bedroom.local THEOS_DEVICE_PORT=22
+
+# ESP
+export PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH # https://github.com/pfalcon/esp-open-sdk
+export PATH=~/.dotfiles/plugins/zsh/esptool:$PATH
+export PATH=~/Developer/personal/xtensa-lx106-elf/bin:$PATH
+export SDK_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
+export ESPPORT=/dev/tty.SLAB_USBtoUART
+export ESP_OPEN_RTOS_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
 
 # MTA Arrival Times project configuration
 if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi

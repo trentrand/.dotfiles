@@ -7,3 +7,6 @@
 [submodule ".dotfiles/plugins/zsh/pure"]
 	path = .dotfiles/plugins/zsh/pure
 	url = https://github.com/sindresorhus/pure.git
+[submodule ".dotfiles/plugins/zsh/esp-open-rtos"]
+	path = .dotfiles/plugins/zsh/esp-open-rtos
+	url = https://github.com/SuperHouse/esp-open-rtos.git
