@@ -113,10 +113,12 @@ nmap <F7> <C-w>H <CR>
 nmap <F8> <C-w>K <CR>
 
 " Search files (also moves cursor if on nerd tree)
-nnoremap <silent> <expr> <C-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":FZF\<cr>"
+" nnoremap <silent> <expr> <C-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":FZF\<cr>"
+cnoreabbrev files FZF
 
 " search buffers (also moves cursor if on nerd tree)
-nnoremap <silent> <expr> <C-o> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Buffers\<cr>"
+" nnoremap <silent> <expr> <C-o> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Buffers\<cr>"
+cnoreabbrev ls Buffer
 
 " Pane forward and backward
 nnoremap <Tab> <c-w>w
