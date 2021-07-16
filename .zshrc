@@ -22,6 +22,10 @@ export KEYTIMEOUT=1
 CASE_SENSITIVE="false"
 HYPHEN_INSENSITIVE="true" # Use _ and - interchangeably, both will match
 
+# Filter command history with current command
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+
 # Run Tmux automatically on zsh launch
 if [ "$TMUX" = "" ]; then tmux attach || tmux new-session; fi
 
