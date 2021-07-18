@@ -20,6 +20,17 @@ require('packer').startup(function ()
   use 'sainnhe/everforest'
   use 'swalladge/paper.vim'
 
+  -- Language server
+  use {
+    'neovim/nvim-lspconfig',
+    config = [[require('config/lspconfig')]]
+  }
+  use {
+    'kabouzeid/nvim-lspinstall',
+    config= [[require('config/lspinstall')]]
+  }
+  use 'hrsh7th/nvim-compe' -- auto completion
+
   -- Navigation
   use {
     'junegunn/fzf',
