@@ -30,6 +30,17 @@ require('packer').startup(function ()
     config= [[require('config/lspinstall')]]
   }
   use 'hrsh7th/nvim-compe' -- auto completion
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config= [[require('config/treesitter')]]
+  }
+  use {
+    'lewis6991/spellsitter.nvim',
+    config = function()
+      require('spellsitter').setup()
+    end
+  }
 
   -- Navigation
   use {
