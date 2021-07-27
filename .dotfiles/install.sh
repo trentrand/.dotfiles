@@ -5,7 +5,7 @@ echo "alias dotfiles='$dotfiles_command'" >> $HOME/.zshrc
 eval $dotfiles_command config --local status.showUntrackedFiles no
 
 # Install plugins stored as git submodules in ~/.dotfiles/plugins
-git submodule update --init --recursive
+eval $dotfiles_command submodule update --init --recursive
 
 # Get platform for platform-specific commands
 platform=`uname`
