@@ -1,0 +1,27 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Trent Rand
+	email = contact@trentrand.com
+	username = trentmrand
+[core]
+	editor = vim
+	excludesfile = /Users/trand/.gitignore_global
+[rebase]
+	autosquash = true
+[rerere]
+	enabled = true
+[push]
+	default = current
+[difftool]
+	prompt = false
+[alias]
+  diff = git diff -- ':!**/package-lock.json' ':!**/yarn.lock'
+  personalprofile = !git config user.email \"contact@trentrand.com\" && git config user.username \"trentrand\"
+[status]
+	submoduleSummary = true
+[init]
+	defaultBranch = master
