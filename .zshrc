@@ -3,6 +3,9 @@ alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 export DEFAULT_USER=`whoami`
 export IP=`ifconfig en0 | grep inet | awk '$1=="inet" {print $2}'`
 
+# Get platform for platform-specific commands
+platform=`uname`
+
 # Enable 8-bit color themes (actual theme set in Alacritty configuration)
 export TERM=xterm-256color
 ZSH_THEME="" # actual theme set iun
@@ -43,8 +46,10 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # ssh-add $HOME/.ssh/id_rsa # prompt for passphrase once per login
 
 # Default command overwrites 😬
-alias cat="bat"
-alias ls="exa"
+if [ "$platform" = "Darwin" ]; then
+  alias cat="bat"
+  alias ls="exa"
+fi
 
 # Custom git commands
 # TODO: Move these to ~/.dotfiles/plugins/git
