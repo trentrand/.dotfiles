@@ -7,5 +7,18 @@ eval $dotfiles_command config --local status.showUntrackedFiles no
 # Install plugins stored as git submodules in ~/.dotfiles/plugins
 git submodule update --init --recursive
 
+# Get platform for platform-specific commands
+platform=`uname`
+
 # Install plugins from Homebrew package manager
-brew install neovim
+if [ "$platform" = "Darwin" ]; then
+  brew install neovim
+  brew install bat
+  brew install exa
+elif [ "$platform" = "Linux" ]; then
+  sudo apt install neovim
+fi
+
+# Symbolically link plugins to required paths
+ln -s ~/.dotfiles/plugins/zsh/nvm ~/.nvm
+ln -s ~/.dotfiles/plugins/zsh/pure/pure.zsh /usr/local/share/zsh/site-functions/prompt_pure_setup
