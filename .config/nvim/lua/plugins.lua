@@ -44,13 +44,11 @@ require('packer').startup(function ()
 
   -- Navigation
   use {
-    'junegunn/fzf',
-    run = [[fn['fzf#install']()]],
-    config = [[require('config/fzf')]]
+    'nvim-telescope/telescope.nvim',
+    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    config = [[require('config/telescope')]]
   }
-  use 'junegunn/fzf.vim'
   use 'scrooloose/nerdtree'
-
   use 'tpope/vim-commentary'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-surround'
