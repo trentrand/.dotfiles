@@ -25,3 +25,5 @@
 	submoduleSummary = true
 [init]
 	defaultBranch = master
+[log]
+  abbrevCommit = true
