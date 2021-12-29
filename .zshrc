@@ -33,9 +33,13 @@ bindkey "^[[B" history-beginning-search-forward
 if [ "$TMUX" = "" ]; then tmux attach || tmux new-session; fi
 
 # Use minimal and fast Pure prompt plugin: https://github.com/sindresorhus/pure
-fpath+=$ZSH_PLUGINS/pure/pure.plugin.zsh
+fpath+=$ZSH_PLUGINS/pure
+# fpath+=("$ZSH_PLUGINS/pure/pure.plugin.zsh", "$ZSH_PLUGINS/pure/async.zsh")
 autoload -U promptinit; promptinit
 prompt pure
+
+# Import credentials as environment variables
+source ~/.credentials
 
 # Specify bin for default text editors, referenced by various programs and scripts
 export EDITOR=vim
@@ -44,6 +48,9 @@ export REACT_EDITOR=vim
 # SSH configuration
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 # ssh-add $HOME/.ssh/id_rsa # prompt for passphrase once per login
+
+# Image Editor configuration
+export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
 
 # Default command overwrites 😬
 if [ "$platform" = "Darwin" ]; then
@@ -79,17 +86,27 @@ gitRewriteAuthor () {
 export YDIFF_OPTIONS="--width 0 --side-by-side"
 
 # FZF: https://github.com/junegunn/fzf
-export FZF_DEFAULT_COMMAND="rg --files --no-ignore-vcs --hidden -g '!{.git/*,node_modules/*,**/.git/*,**/node_modules/*,**universal/fonts/*,**/*.class,**/network.har,**/MobileV7/*}'"
-export FZF_DEFAULT_OPTS="--layout=reverse" # --preview \"bat {}\""
+# export FZF_DEFAULT_COMMAND="rg --files --no-ignore-vcs --hidden -g '!{.git/*,node_modules/*,**/.git/*,**/node_modules/*,**universal/fonts/*,**/*.class,**/network.har,**/MobileV7/*,**/__mocks__/**,**/i18n/*}'"
+# export FZF_DEFAULT_COMMAND="rg --files --ignore-vcs --hidden -g '!{.git/*,node_modules/*,**/.git/*,**/node_modules/*,**universal/fonts/*,**/*.class,**/network.har,**/MobileV7/*,**/__mocks__/**,**/i18n/*}'"
+# export FZF_DEFAULT_OPTS='
+#   --reverse 
+#   --bind "?:preview:cat {}"
+#   --preview-window=down:50%:rounded:hidden
+#   --preview "bat --color=always --style=header,grid --line-range :300 {}"
+# '
 
-# NVM - Node Version Manager: https://github.com/nvm-sh/nvm
-export NVM_DIR="~/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH=~/.npm-global/bin:$PATH
 
 # Add various executables and command-line interfaces
-export PATH=~/bin:/usr/local/bin:$PATH # macOS default user-installed bin directories
+export PATH=/usr/local/bin:$PATH # homebrew
+# export PATH=~/bin:/usr/local/bin:$PATH # macOS default user-installed bin directories
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH" # vscode
-export PATH=~/Library/Python/2.7/bin:$PATH # python
+alias get_emsdk="source ~/Developer/personal/emsdk/emsdk_env.sh" # emscripten
 export PATH=/usr/local/go/bin:$PATH # Golang
 export PATH=/usr/X11/bin/xhost:$PATH # X11 xhost: https://www.xquartz.org/
 
@@ -97,28 +114,49 @@ export PATH=/usr/X11/bin/xhost:$PATH # X11 xhost: https://www.xquartz.org/
 export DRONE_SERVER=https://drone.squarespace.net
 export DRONE_TOKEN=$(security find-generic-password -a ${DEFAULT_USER} -s DRONE_TOKEN -w)
 
+# Virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
+source /usr/local/bin/virtualenvwrapper.sh
+
+# Site-server local
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
+# export PATH=/Library/Developer/CommandLineTools/usr/bin:$PATH
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+export PATH=$HOME/squarespace/generated/bin:$PATH
+export CPATH=`xcrun --show-sdk-path`/usr/include
+
 # Grant larger memory allocation limit to NodeJS
-export NODE_OPTIONS=--max_old_space_size=8192
+export NODE_OPTIONS=--max_old_space_size=6144 # 6GB
 
 # GNU Bin Utils
-PATH=/usr/local/opt/binutils/bin:$PATH
-PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
-PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
-export LDFLAGS="-L/usr/local/opt/binutils/lib"
-export CPPFLAGS="-I/usr/local/opt/binutils/include"
+# PATH=/usr/local/opt/binutils/bin:$PATH
+# PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+# PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
+# export LDFLAGS="-L/usr/local/opt/binutils/lib"
+# export CPPFLAGS="-I/usr/local/opt/binutils/include"
 
 # iOS jailbreak development tool: https://github.com/theos/theos
 export THEOS=/opt/theos
 export PATH=$THEOS/bin:$PATH
 export THEOS_DEVICE_IP=Bedroom.local THEOS_DEVICE_PORT=22
 
-# ESP
-export PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH # https://github.com/pfalcon/esp-open-sdk
-export PATH=~/.dotfiles/plugins/zsh/esptool:$PATH
-export PATH=~/Developer/personal/xtensa-lx106-elf/bin:$PATH
-export SDK_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
-export ESPPORT=/dev/tty.SLAB_USBtoUART
-export ESP_OPEN_RTOS_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
+# ESP8266
+# export PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH # https://github.com/pfalcon/esp-open-sdk
+# export PATH=~/.dotfiles/plugins/zsh/esptool:$PATH
+# export PATH=~/Developer/personal/xtensa-lx106-elf/bin:$PATH
+# export SDK_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
+# export ESP_OPEN_RTOS_PATH=~/.dotfiles/plugins/zsh/esp-open-rtos
+
+# ESP32
+export IDF_PYTHON_ENV_PATH=/Users/trand/.espressif/python_env/idf4.2_py3.9_env
+export IDF_PATH=~/Developer/personal/esp-idf
+export PATH=~/Developer/personal/xtensa-esp32-elf/bin:$PATH
+export ESPPORT=/dev/cu.usbserial-0001
+alias get_idf='. $HOME/Developer/personal/esp-idf/export.sh'
 
 # MTA Arrival Times project configuration
 if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
@@ -126,6 +164,9 @@ if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/co
 export MTA_API_KEY=$(security find-generic-password -a ${DEFAULT_USER} -s MTA_API_KEY -w) # https://datamine.mta.info
 export FIREBASE_SERVICE_ACCOUNT_KEY_PATH="~/mta-arrival-times-firebase-adminsdk-7c3wo-06ef218af8.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$FIREBASE_SERVICE_ACCOUNT_KEY_PATH"
+
+# Ansible
+export ANSIBLE_VAULT_PASSWORD_FILE=~/.ansible-vault-pw
 
 # Custom aliases for frequently visited directories - view with `alias` command
 alias Desktop='cd ~/Desktop'
@@ -152,6 +193,8 @@ alias Developer='cd ~/Developer'
         alias Universal="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal"
           alias App="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/App"
           alias Frame="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame"
+          alias ContentBrowser="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/App/screens/ContentBrowser"
+          alias ConfigWebsite="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/ConfigWebsite"
 
 # Aliases for common Site Server V6 development processes
 alias startproxy='cd ~/Developer/work/site-server-proxy && npm run start';
@@ -163,10 +206,11 @@ alias gradleruni18n="./gradlew run -DUseMemcached=true -Pi18n=true"
 
 # Inject block-schemas into layout engine, then layout engine into v6
 linkBlockSchemas() {
-  cd ~/Developer/work/layout-engine;
-  npm install --save ~/Developer/work/block-schemas
-  cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal
-  npm install --save ~/Developer/work/layout-engine
+  pushd ~/Developer/work/block-editor-schemas;
+  npm run build;
+  cp -R dist/cjs ../squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
+  cp -R dist/lib ../squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
+  popd;
 }
 
 # "Link" @sqs/rte-react to the Frame/node_modules directory
@@ -222,3 +266,24 @@ printColors() {
 
 # Recursively delete all .DS_Store files in the current working directory
 alias delete-dsstore="find . -name '.DS_Store' -type f -delete"
+
+# Attach to tmux session of Ubuntu remote virtual machine
+attachVm() {
+	ssh trent@trent-VirtualBox.local -t tmux new-session -A -s vm
+}
+export PATH="$PATH:/Users/trand/.cargo/bin"
+source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+export PATH="$PATH:/Users/trand/.cargo/bin"
+source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+export PATH="$PATH:/Users/trand/.cargo/bin"
+source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+export PATH="$PATH:/Users/trand/.cargo/bin"
+source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+export PATH="$PATH:/Users/trand/.cargo/bin"
+source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+PATH=$PATH:/Users/trand/Developer/work/kubectl-plugins
+
+vpn-status() {
+  curl https://am.i.mullvad.net/connected
+}

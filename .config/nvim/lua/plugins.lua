@@ -21,26 +21,34 @@ require('packer').startup(function ()
   use 'swalladge/paper.vim'
 
   -- Language server
-  use {
-    'neovim/nvim-lspconfig',
-    config = [[require('config/lspconfig')]]
-  }
+  use 'neovim/nvim-lspconfig'
   use {
     'kabouzeid/nvim-lspinstall',
-    config= [[require('config/lspinstall')]]
+    config = [[require('config/lspinstall')]]
   }
-  use 'hrsh7th/nvim-compe' -- auto completion
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
-    config= [[require('config/treesitter')]]
+    config = [[require('config/treesitter')]]
+  }
+  -- use {
+  --   'lewis6991/spellsitter.nvim',
+  --   config = function()
+  --     require('spellsitter').setup()
+  --   end
+  -- }
+  use {
+    'hrsh7th/nvim-compe',
+    config = [[require('config/compe')]]
   }
   use {
-    'lewis6991/spellsitter.nvim',
+    'folke/todo-comments.nvim',
+    requires = 'nvim-lua/plenary.nvim',
     config = function()
-      require('spellsitter').setup()
+      require("todo-comments").setup()
     end
   }
+  use 'ruanyl/vim-gh-line'
 
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- Navigation
@@ -49,8 +57,26 @@ require('packer').startup(function ()
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
     config = [[require('config/telescope')]]
   }
+  -- use 'nvim-telescope/telescope-fzf-writer.nvim'
   use 'scrooloose/nerdtree'
+
+  -- Editing
   use 'tpope/vim-commentary'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-surround'
+
+  --[[ Unused Plugins
+  Plug 'oguzbilgic/vim-gdiff'
+  Plug 'airblade/vim-gitgutter'
+  Plug 'https://github.com/ElHacker/vim-gitstatus.git'
+  Plug 'tpope/vim-repeat'
+  Plug 'sheerun/vim-polyglot'
+  Plug 'jeffkreeftmeijer/vim-numbertoggle'
+  Plug 'chrisbra/unicode.vim'
+  Plug 'jesseleite/vim-agriculture'
+  Plug 'suan/vim-instant-markdown'
+  Plug 'Freedzone/kerbovim'
+  Plug 'cstrahan/vim-capnp'
+  Plug 'b4winckler/vim-objc'
+  --]]
 end)

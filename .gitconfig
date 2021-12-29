@@ -13,17 +13,21 @@
 [rebase]
 	autosquash = true
 [rerere]
-	enabled = true
+	enabled = false
 [push]
 	default = current
 [difftool]
 	prompt = false
 [alias]
-  diff = git diff -- ':!**/package-lock.json' ':!**/yarn.lock'
+  diff = !git diff -- ':!**/package-lock.json' ':!**/yarn.lock' ':!**/npm-shrinkwrap.json'
   personalprofile = !git config user.email \"contact@trentrand.com\" && git config user.username \"trentrand\"
+[includeIf "gitdir:~/Developer/work/"]
+  path = ~/Developer/work/.gitconfig
 [status]
 	submoduleSummary = true
 [init]
 	defaultBranch = master
 [log]
   abbrevCommit = true
+[diff]
+	algorithm = patience

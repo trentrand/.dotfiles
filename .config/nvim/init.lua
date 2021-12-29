@@ -10,12 +10,12 @@ opt.termguicolors = true
 opt.guifont = 'Fira_Code'
 
 -- Inside? Turn on these!
-opt.background = 'dark'
-cmd 'colorscheme everforest'
+-- opt.background = 'dark'
+-- cmd 'colorscheme everforest'
 
 -- Outside? Turn on these!
--- opt.background = 'light'
--- cmd 'colorscheme paper'
+opt.background = 'light'
+cmd 'colorscheme paper'
 
 require 'plugins'
 
@@ -45,11 +45,14 @@ opt.tabstop = 2        -- Use 2 spaces instead of tabs
 cmd 'filetype plugin on'   -- Load language-specific plugins when a particular filetype is created or loaded
 cmd 'syntax on'            -- Enable syntax highlighting
 bufopt.suffixesadd = '.js' -- When using the gf command, it will attempt to navigate to <filename>.js
+vim.api.nvim_exec([[
+	autocmd BufRead,BufNewFile *.sol set filetype=solidity
+]], false)
 
 -- Line Width
 bufopt.textwidth = 120  -- Line wrap (number of characters)
-winopt.wrap = true      -- Wrap display of long lines without affecting buffer contents
-opt.showbreak = '+++ '  -- Markup to print before wrapped lines
+-- winopt.wrap = true      -- Wrap display of long lines without affecting buffer contents
+-- opt.showbreak = '+++ '  -- Markup to print before wrapped lines
 
 -- Rulers
 winopt.number = true         -- Show line numbers

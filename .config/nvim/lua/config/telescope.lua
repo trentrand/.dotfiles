@@ -7,7 +7,14 @@ require('telescope').setup{
       '--with-filename',
       '--line-number',
       '--column',
-      '--smart-case'
+      '--smart-case',
+      '--hidden'
+    },
+    file_ignore_patterns = {
+      '.git/.*',
+      'yarn.lock',
+      'package-lock.json',
+      'node%_modules/.*',
     },
     prompt_prefix = "> ",
     selection_caret = "> ",
@@ -40,6 +47,11 @@ require('telescope').setup{
     file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
     grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
     qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+    mappings = {
+      i = {
+        ["<C-q>"] = require("telescope.actions").smart_send_to_qflist + require("telescope.actions").open_qflist,
+      }
+    },
   },
   pickers = {
     buffers = {
@@ -48,10 +60,26 @@ require('telescope').setup{
       mappings = {
         i = {
           ["<c-d>"] = require("telescope.actions").delete_buffer,
+          ["<C-u>"] = require("telescope.actions").preview_scrolling_up,
+          ["<C-d>"] = require("telescope.actions").preview_scrolling_down,
+          -- Replace current quickfix with selected Telescope entries(or all entries)
+          ["<C-q>"] = require("telescope.actions").smart_send_to_qflist + require("telescope.actions").open_qflist,
+          -- Add entries to current quickfix (selected or all entries)
+          ["<C-a>"] = require("telescope.actions").smart_add_to_qflist,
+          ["<Tab>"] = require("telescope.actions").toggle_selection,
+          -- ["<C-w>l"] = actions.preview_switch_window_right,
         },
         n = {
           ["<c-d>"] = require("telescope.actions").delete_buffer,
-        }
+          ["<C-u>"] = require("telescope.actions").preview_scrolling_up,
+          ["<C-d>"] = require("telescope.actions").preview_scrolling_down,
+          -- Replace current quickfix with selected Telescope entries(or all entries)
+          ["<C-q>"] = require("telescope.actions").smart_send_to_qflist + require("telescope.actions").open_qflist,
+          -- Add entries to current quickfix (selected or all entries)
+          ["<C-a>"] = require("telescope.actions").smart_add_to_qflist,
+          ["<Tab>"] = require("telescope.actions").toggle_selection,
+          -- ["<C-w>l"] = actions.preview_switch_window_right,
+        },
       }
     },
     find_files = {
@@ -73,7 +101,7 @@ require('telescope').setup{
 }
 
  vim.api.nvim_exec([[
-  command! Files call luaeval('require("telescope.builtin").find_files()')
+   command! Files call luaeval('require("telescope.builtin").find_files()')
  ]], false)
 
 vim.api.nvim_exec([[
