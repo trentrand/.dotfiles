@@ -8,7 +8,7 @@
 	email = contact@trentrand.com
 	username = trentmrand
 [core]
-	editor = vim
+	editor = nvim
 	excludesfile = /Users/trand/.gitignore_global
 [rebase]
 	autosquash = true
