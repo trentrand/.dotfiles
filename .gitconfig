@@ -9,7 +9,7 @@
 	username = trentmrand
 [core]
 	editor = nvim
-	excludesfile = /Users/trand/.gitignore_global
+	excludesfile = /Users/trand/.gitignore
 [rebase]
 	autosquash = true
 [rerere]
