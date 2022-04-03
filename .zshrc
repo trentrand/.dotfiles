@@ -102,6 +102,19 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH=~/.npm-global/bin:$PATH
 
+autoload -U add-zsh-hook
+# switch node version automatically when working directory has a .nvmrc file
+load-nvmrc() {
+  if [[ -f .nvmrc && -r .nvmrc ]]; then
+    nvm use
+  elif [[ $(nvm version) != $(nvm version default)  ]]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
 # Add various executables and command-line interfaces
 export PATH=/usr/local/bin:$PATH # homebrew
 # export PATH=~/bin:/usr/local/bin:$PATH # macOS default user-installed bin directories
