@@ -114,6 +114,16 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+# switch npm configuration automatically when working directory is within Developer directories
+load-npmrc() {
+  if [[ $PWD == $(echo ~/Developer/work)* ]]; then
+    npmrc work
+  elif [[ $PWD == $(echo ~/Developer/personal)* ]]; then
+    npmrc personal
+  fi
+}
+add-zsh-hook chpwd load-npmrc
+load-npmrc
 
 # Add various executables and command-line interfaces
 export PATH=/usr/local/bin:$PATH # homebrew
