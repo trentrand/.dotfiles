@@ -21,7 +21,7 @@
 [alias]
   diff = !git diff -- ':!**/package-lock.json' ':!**/yarn.lock' ':!**/npm-shrinkwrap.json'
   personalprofile = !git config user.email \"contact@trentrand.com\" && git config user.username \"trentrand\"
-[includeIf "gitdir:~/Developer/work/"]
+[includeIf "gitdir:~/Developer/work/**/**"]
   path = ~/Developer/work/.gitconfig
 [status]
 	submoduleSummary = true
