@@ -10,12 +10,6 @@ require('telescope').setup{
       '--smart-case',
       '--hidden'
     },
-    file_ignore_patterns = {
-      '.git/.*',
-      'yarn.lock',
-      'package-lock.json',
-      'node%_modules/.*',
-    },
     prompt_prefix = "> ",
     selection_caret = "> ",
     entry_prefix = "  ",
@@ -29,10 +23,16 @@ require('telescope').setup{
       },
       vertical = {
         mirror = false,
+        width = 0.9,
       },
     },
     file_sorter = require'telescope.sorters'.get_fuzzy_file,
-    file_ignore_patterns = {},
+    file_ignore_patterns = {
+      '.git/.*',
+      'yarn.lock',
+      'package-lock.json',
+      'node_modules',
+    },
     generic_sorter = require'telescope.sorters'.get_generic_fuzzy_sorter,
     winblend = 0,
     border = {},
@@ -92,13 +92,32 @@ require('telescope').setup{
   extensions = {
     fzf = {
       fuzzy = true,                    -- false will only do exact matching
-      override_generic_sorter = false, -- override the generic sorter
+      override_generic_sorter = true,  -- override the generic sorter
       override_file_sorter = true,     -- override the file sorter
       case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-                                       -- the default case_mode is "smart_case"
-    }
+    },
+    live_grep_args = {
+      auto_quoting = true,
+    },
+    file_browser = {
+      -- theme = "ivy",
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+      mappings = {
+        ["i"] = {
+          -- your custom insert mode mappings
+        },
+        ["n"] = {
+          -- your custom normal mode mappings
+        },
+      },
+    },
   }
 }
+
+-- To get fzf loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+require('telescope').load_extension('fzf')
 
  vim.api.nvim_exec([[
    command! Files call luaeval('require("telescope.builtin").find_files()')
@@ -108,10 +127,15 @@ vim.api.nvim_exec([[
   command! Buffers call luaeval('require("telescope.builtin").buffers()')
 ]], false)
 
+require('telescope').load_extension('live_grep_args')
+
 vim.api.nvim_exec([[
-  command! Rg call luaeval('require("telescope.builtin").live_grep()')
+  command! Rg call luaeval('require("telescope").extensions.live_grep_args.live_grep_args()')
 ]], false)
 
--- To get fzf loaded and working with telescope, you need to call
--- load_extension, somewhere after setup function:
-require('telescope').load_extension('fzf')
+
+-- require("telescope").load_extension('file_browser')
+-- vim.api.nvim_exec([[
+--   command! E call luaeval("require('telescope').extensions.file_browser.file_browser({path = vim.fn.expand('%:p:h')})")
+-- ]], false)
+

@@ -15,6 +15,7 @@ opt.guifont = 'Fira_Code'
 
 -- Outside? Turn on these!
 opt.background = 'light'
+-- TODO: only use if exists
 cmd 'colorscheme paper'
 
 require 'plugins'
@@ -40,6 +41,8 @@ opt.smarttab = true    -- Enable smart-tabs
 opt.shiftwidth = 2     -- Number of auto-indent spaces
 opt.softtabstop = 2    -- Number of spaces per Tab
 opt.tabstop = 2        -- Use 2 spaces instead of tabs
+
+opt.fixeol = false    -- Prevent save from adding newline at end of file
 
 -- Language Support
 cmd 'filetype plugin on'   -- Load language-specific plugins when a particular filetype is created or loaded
@@ -77,3 +80,6 @@ opt.incsearch = true  -- Highlight search results as term is being written
 opt.hlsearch = true   -- Highlight all search results
 opt.showmatch = true  -- Highlight matching brace
 opt.smartcase = true  -- Search behavior becomes case-sensitive if term contains upper-case character
+
+-- File explorer
+g.netrw_list_hide = '.DS_Store,*/.undodir/*'
