@@ -3,9 +3,6 @@ alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 export DEFAULT_USER=`whoami`
 export IP=`ifconfig en0 | grep inet | awk '$1=="inet" {print $2}'`
 
-# Get platform for platform-specific commands
-platform=`uname`
-
 # Enable 8-bit color themes (actual theme set in Alacritty configuration)
 export TERM=xterm-256color
 ZSH_THEME="" # actual theme set iun
@@ -14,11 +11,25 @@ ZSH_THEME="" # actual theme set iun
 export ZSH_PLUGINS=$HOME/.dotfiles/plugins/zsh
 
 # Plugins installed with default settings, more below inline with settings
-source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Handle switching between arm64 and x86_64 processor architectures
+alias azsh="arch -arm64 zsh"
+alias izsh="arch -x86_64 zsh"
+
+if [ "$(uname -p)" = "i386" ]; then
+  echo "Zsh session restarted with x86_64 binary"
+  eval "$(/usr/local/homebrew/bin/brew shellenv)"
+  alias brew='/usr/local/homebrew/bin/brew'
+else
+  # echo "Zsh session restarted with arm64 binary"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  alias brew='/opt/homebrew/bin/brew'
+fi
 
 # Enable vi insert mode bindings
 bindkey -v
-source $ZSH_PLUGINS/zsh-vim-mode/zsh-vim-mode.plugin.zsh
+source /opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 export KEYTIMEOUT=1
 
 # Command completion
@@ -45,18 +56,26 @@ source ~/.credentials
 export EDITOR=vim
 export REACT_EDITOR=vim
 
+# TODO: No longer needed after specifying id_rsa reference in ~/.ssh/config?
 # SSH configuration
-export SSH_KEY_PATH="~/.ssh/rsa_id"
-# ssh-add $HOME/.ssh/id_rsa # prompt for passphrase once per login
+# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# ssh-add --apple-use-keychain $HOME/.ssh/id_rsa  # prompt for passphrase once per login
 
 # Image Editor configuration
 export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
 
+# pnpm
+export PNPM_HOME="/Users/trand/Library/pnpm"
+export PATH=$PNPM_HOME:$PATH
+
 # Default command overwrites 😬
-if [ "$platform" = "Darwin" ]; then
-  alias cat="bat"
-  alias ls="exa"
-fi
+alias cat="bat"
+alias ls="exa"
+
+# Time Machine
+alias timemachine-fast-mode="sudo sysctl debug.lowpri\_throttle_enabled=0"
+alias timemachine-restore-mode="sudo sysctl debug.lowpri\_throttle_enabled=1"
+alias timemachine-prevent-sleep="echo \"Preventing sleep (3hr)!\" && caffeinate -t 10800 &"
 
 # Custom git commands
 # TODO: Move these to ~/.dotfiles/plugins/git
@@ -106,7 +125,7 @@ autoload -U add-zsh-hook
 # switch node version automatically when working directory has a .nvmrc file
 load-nvmrc() {
   if [[ -f .nvmrc && -r .nvmrc ]]; then
-    nvm use
+    nvm use > /dev/null
   elif [[ $(nvm version) != $(nvm version default)  ]]; then
     echo "Reverting to nvm default version"
     nvm use default
@@ -116,10 +135,10 @@ add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 # switch npm configuration automatically when working directory is within Developer directories
 load-npmrc() {
-  if [[ $PWD == $(echo ~/Developer/work)* ]]; then
-    npmrc work
-  elif [[ $PWD == $(echo ~/Developer/personal)* ]]; then
-    npmrc personal
+  if [[ $PWD == ~/Developer/work* ]]; then
+    npmrc work > /dev/null
+  elif [[ $PWD == ~/Developer/personal* ]]; then
+    npmrc personal > /dev/null
   fi
 }
 add-zsh-hook chpwd load-npmrc
@@ -127,6 +146,7 @@ load-npmrc
 
 # Add various executables and command-line interfaces
 export PATH=/usr/local/bin:$PATH # homebrew
+export PATH=~/.local/bin:$PATH # user packages
 # export PATH=~/bin:/usr/local/bin:$PATH # macOS default user-installed bin directories
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH" # vscode
 alias get_emsdk="source ~/Developer/personal/emsdk/emsdk_env.sh" # emscripten
@@ -135,11 +155,11 @@ export PATH=/usr/X11/bin/xhost:$PATH # X11 xhost: https://www.xquartz.org/
 
 # Drone
 export DRONE_SERVER=https://drone.squarespace.net
-export DRONE_TOKEN=$(security find-generic-password -a ${DEFAULT_USER} -s DRONE_TOKEN -w)
+# export DRONE_TOKEN=$(security find-generic-password -a ${DEFAULT_USER} -s DRONE_TOKEN -w)
 
 # Virtualenvwrapper
 export WORKON_HOME=$HOME/.virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+export VIRTUALENVWRAPPER_PYTHON=/opt/homebrew/bin/python3
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
 source /usr/local/bin/virtualenvwrapper.sh
 
@@ -151,6 +171,7 @@ export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 export PATH=$HOME/squarespace/generated/bin:$PATH
 export CPATH=`xcrun --show-sdk-path`/usr/include
+source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # Grant larger memory allocation limit to NodeJS
 export NODE_OPTIONS=--max_old_space_size=6144 # 6GB
@@ -184,7 +205,7 @@ alias get_idf='. $HOME/Developer/personal/esp-idf/export.sh'
 # MTA Arrival Times project configuration
 if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
 if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/completion.zsh.inc'; fi
-export MTA_API_KEY=$(security find-generic-password -a ${DEFAULT_USER} -s MTA_API_KEY -w) # https://datamine.mta.info
+# export MTA_API_KEY=$(security find-generic-password -a ${DEFAULT_USER} -s MTA_API_KEY -w) # https://datamine.mta.info
 export FIREBASE_SERVICE_ACCOUNT_KEY_PATH="~/mta-arrival-times-firebase-adminsdk-7c3wo-06ef218af8.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$FIREBASE_SERVICE_ACCOUNT_KEY_PATH"
 
@@ -211,13 +232,16 @@ alias Developer='cd ~/Developer'
     alias SectionPortal="cd ~/Developer/work/section-controller-portal"
     alias UBE="cd ~/Developer/work/block-schemas"
     alias V6="cd ~/Developer/work/squarespace-v6"
+    alias NBF="cd ~/Developer/work/new-bedford-framework"
+    alias FrontendPackages="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/packages"
+    alias VisitorForms="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/website/visitor-forms"
       alias Aux="cd ~/Developer/work/squarespace-v6/aux-server"
-      alias Site="cd ~/Developer/work/squarespace-v6/site-server"
-        alias Universal="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal"
-          alias App="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/App"
-          alias Frame="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame"
-          alias ContentBrowser="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/App/screens/ContentBrowser"
-          alias ConfigWebsite="cd ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/ConfigWebsite"
+      alias Site="cd ~/Developer/work/config-frontend/site-server"
+        alias Universal="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal"
+          alias App="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App"
+          alias Frame="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/Frame"
+          alias ContentBrowser="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App/screens/ContentBrowser"
+          alias ConfigWebsite="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/ConfigWebsite"
 
 # Aliases for common Site Server V6 development processes
 alias startproxy='cd ~/Developer/work/site-server-proxy && npm run start';
@@ -231,45 +255,50 @@ alias gradleruni18n="./gradlew run -DUseMemcached=true -Pi18n=true"
 linkBlockSchemas() {
   pushd ~/Developer/work/block-editor-schemas;
   npm run build;
-  cp -R dist/cjs ../squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
-  cp -R dist/lib ../squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
+  cp -R dist/cjs ../config-frontend/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
+  cp -R dist/lib ../config-frontend/site-server/src/main/webapp/universal/node_modules/@sqs/block-editor-schemas/dist;
   popd;
 }
 
 # "Link" @sqs/rte-react to the Frame/node_modules directory
 linkRteReact() {
   cd ~/Developer/work/rte;
-  cp -R rte-react/dist ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/rte-react;
+  cp -R rte-react/dist ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/rte-react;
 }
 # "Link" @sqs/rte-core to the Frame/node_modules directory
 linkRteCore() {
   cd ~/Developer/work/rte;
-  cp -R rte-core/dist ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/rte-core;
+  cp -R rte-core/dist ~/Developer/work/config-frontend/site-server/common/temp/node_modules/.pnpm/@sqs+rte-core@4.22.7/node_modules/@sqs/rte-core
 }
 # "Link" @sqs/section-controller-portal to the Frame/node_modulesdirectory
 linkSectionControllerPortal() {
   cd ~/Developer/work/section-controller-portal;
-  cp -R lib ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/section-controller-portal;
+  cp -R lib ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/section-controller-portal;
   cp -R lib ~/Developer/work/eight/node_modules/@sqs/section-controller-portal;
   cp -R lib ~/Developer/work/section-renderer/node_modules/@sqs/section-controller-portal;
-  cp -R lib ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/section-renderer/node_modules/@sqs/section-controller-portal;
+  cp -R lib ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/Frame/node_modules/@sqs/section-renderer/node_modules/@sqs/section-controller-portal;
   echo "Section Controller Portal built files linked"
 }
 # "Link" @sqs/section-renderer to the Frame/node_modulesdirectory
 linkSectionRenderer() {
   cd ~/Developer/work/section-renderer/lib;
-  cp -R . ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/section-renderer/lib;
+  cp -R . ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/node_modules/@sqs/section-renderer/lib;
   cd ~/Developer/work/section-renderer;
-  echo "Section Renderer built files copied to Squarespace-v6"
+  echo "Section Renderer built files copied to config-frontend"
 }
 # Webpack build and "link" @sqs/section-renderer to the Frame/node_modulesdirectory
 buildAndLinkSectionRenderer() {
   cd ~/Developer/work/section-renderer;
   npm run build;
   cd ~/Developer/work/section-renderer/lib;
-  cp -R . ~/Developer/work/squarespace-v6/site-server/src/main/webapp/universal/node_modules/@sqs/section-renderer/lib;
+  cp -R . ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/node_modules/@sqs/section-renderer/lib;
   cd ~/Developer/work/section-renderer;
-  echo "Section Renderer built and files copied to Squarespace-v6"
+  echo "Section Renderer built and files copied to config-frontend"
+}
+
+fixLockfiles() {
+  git checkout origin/master common/config/rush/pnpm-lock.yaml;
+  npm run rush update;
 }
 
 # Re-run a command until it returns -1
@@ -295,18 +324,15 @@ attachVm() {
 	ssh trent@trent-VirtualBox.local -t tmux new-session -A -s vm
 }
 export PATH="$PATH:/Users/trand/.cargo/bin"
-source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
-export PATH="$PATH:/Users/trand/.cargo/bin"
-source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
-export PATH="$PATH:/Users/trand/.cargo/bin"
-source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
-export PATH="$PATH:/Users/trand/.cargo/bin"
-source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
-export PATH="$PATH:/Users/trand/.cargo/bin"
-source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
+# source /Users/trand/Developer/personal/openpilot/tools/openpilot_env.sh
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 PATH=$PATH:/Users/trand/Developer/work/kubectl-plugins
 
 vpn-status() {
   curl https://am.i.mullvad.net/connected
 }
+
+# Aliases for assets local workflows
+export GIT_HOME=/Users/trand/Developer/work
+alias assetspub="cd $GIT_HOME/assets/packages/asset-common && yalc publish && cd ../asset-picker && yalc publish && cd ../asset-uploader && yalc publish && cd ../asset-library && yalc publish && cd ../.."
+alias assetslink="cd $GIT_HOME/config-frontend/site-server/src/main/webapp/universal/ && yalc link @sqs/asset-common && yalc link @sqs/asset-picker && yalc link @sqs/asset-uploader && yalc link @sqs/asset-library && cd $GIT_HOME/config-frontend/site-server"

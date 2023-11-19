@@ -1,15 +1,15 @@
+[includeIf "gitdir:~/Developer/personal/"]
+  path = ~/Developer/personal/.gitconfig
+[includeIf "gitdir:~/Developer/work/"]
+  path = ~/Developer/work/.squarespace.gitconfig
+[core]
+	editor = nvim
+	excludesfile = /Users/trand/.gitignore
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[user]
-	name = Trent Rand
-	email = contact@trentrand.com
-	username = trentmrand
-[core]
-	editor = nvim
-	excludesfile = /Users/trand/.gitignore
 [rebase]
 	autosquash = true
 [rerere]
@@ -18,11 +18,10 @@
 	default = current
 [difftool]
 	prompt = false
+	tool = difft
 [alias]
   diff = !git diff -- ':!**/package-lock.json' ':!**/yarn.lock' ':!**/npm-shrinkwrap.json'
   personalprofile = !git config user.email \"contact@trentrand.com\" && git config user.username \"trentrand\"
-[includeIf "gitdir:~/Developer/work/**/**"]
-  path = ~/Developer/work/.gitconfig
 [status]
 	submoduleSummary = true
 [init]
@@ -31,3 +30,118 @@
   abbrevCommit = true
 [diff]
 	algorithm = patience
+	external = difft
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[credential "https://code.squarespace.net"]
+	provider = bitbucket
+[credential "https://trand-dev-003.squarespace.com"]
+	provider = generic
+[credential "https://triceratops-pufferfish-5nrr.stage.sqsp.net"]
+	provider = generic
+[credential "https://keyboard-cranberry-y7sf.stage.sqsp.net"]
+	provider = generic
+[credential "https://ukulele-kazoo-bpw3.squarespace.com"]
+	provider = generic
+[credential "https://violin-goose-lx4a.squarespace.com"]
+	provider = generic
+[credential "https://orchid-tomato-tmya.stage.sqsp.net"]
+	provider = generic
+[credential "https://cinnamon-caterpillar-7kwr.stage.sqsp.net"]
+	provider = generic
+[credential "https://mayflower-cornet-trdj.stage.sqsp.net"]
+	provider = generic
+[credential "https://gar-fennel-w597.stage.sqsp.net"]
+	provider = generic
+[credential "https://tan-sawfish-pwye.squarespace.com"]
+	provider = generic
+[credential "https://emu-bullfrog-rjwh.squarespace.com"]
+	provider = generic
+[credential "https://gazelle-chinchilla-4tl9.squarespace.com"]
+	provider = generic
+[credential "https://avocado-gold-d4xa.squarespace.com"]
+	provider = generic
+[credential "https://glockenspiel-chrysalis-l4ra.squarespace.com"]
+	provider = generic
+[credential "https://elk-triceratops-3t3w.squarespace.com"]
+	provider = generic
+[credential "https://lilac-pear.squarespace.com"]
+	provider = generic
+[credential "https://cobalt-salmon-df63.squarespace.com"]
+	provider = generic
+[credential "https://tarantula-lynx-bjh6.squarespace.com"]
+	provider = generic
+[credential "https://saffron-bison-jg27.dev.squarespace.net"]
+	provider = generic
+[credential "https://elephant-oleander-jy2m.stage.sqsp.net"]
+	provider = generic
+[credential "https://clavichord-chameleon-32hc.stage.sqsp.net"]
+	provider = generic
+[credential "https://endive-orca-z6zg.squarespace.com"]
+	provider = generic
+[credential "https://grouper-blenny-8kf3.squarespace.com"]
+	provider = generic
+[credential "https://crocodile-snail-p7k7.squarespace.com"]
+	provider = generic
+[user]
+	email = contact@trentrand.com
+	name = Trent Rand
+[credential]
+	helper = 
+	helper = /usr/local/share/gcm-core/git-credential-manager-core
+[credential "https://mustard-platinum-ykt5.squarespace.com"]
+	provider = generic
+[credential "https://yellow-chinchilla-g96k.squarespace.com"]
+	provider = generic
+[credential "https://gold-coral-yzlf.squarespace.com"]
+	provider = generic
+[credential "https://sqsp-form-improvements-dev.squarespace.com"]
+	provider = generic
+[credential "https://helicon-yellow-eg7e.squarespace.com"]
+	provider = generic
+[credential "https://trentrand2.squarespace.com"]
+	provider = generic
+[credential "https://seal-oleander-b58n.squarespace.com"]
+	provider = generic
+[credential "https://sqsp-form-improvements-demo.squarespace.com"]
+	provider = generic
+[credential "https://chicory-tangerine-y22e.squarespace.com"]
+	provider = generic
+[credential "https://sepia-sepia-wjen.squarespace.com"]
+	provider = generic
+[credential "https://beige-guppy-ls2z.squarespace.com"]
+	provider = generic
+[credential "https://khaki-reindeer-lt4p.squarespace.com"]
+	provider = generic
+[credential "https://maroon-indigo-nrcm.squarespace.com"]
+	provider = generic
+[credential "https://bassoon-indigo-te3z.squarespace.com"]
+	provider = generic
+[credential "https://grouse-swordfish-p3fb.squarespace.com"]
+	provider = generic
+[credential "https://gardenia-lilac-ngwj.squarespace.com"]
+	provider = generic
+[credential "https://gardenia-tuna-bnrl.squarespace.com"]
+	provider = generic
+[credential "https://vibraphone-bronze-fz37.squarespace.com"]
+	provider = generic
+[credential "https://guitar-roadrunner-gk5g.squarespace.com"]
+	provider = generic
+[credential "https://sqs-forms-updated.squarespace.com"]
+	provider = generic
+[credential "https://onion-eagle-p8la.squarespace.com"]
+	provider = generic
+[credential "https://dogfish-bear-kfm7.squarespace.com"]
+	provider = generic
+[credential "https://calliope-wrasse-lcw2.squarespace.com"]
+	provider = generic
+[credential "https://sqs-form-colors.squarespace.com"]
+	provider = generic
+[credential "https://pike-caterpillar-xrlt.squarespace.com"]
+	provider = generic
+[credential "https://gazelle-beagle-bp4z.squarespace.com"]
+	provider = generic
+[credential "https://sawfish-chiton-rmdm.squarespace.com"]
+	provider = generic
+[credential "https://flute-cinnamon-jcxf.squarespace.com"]
+	provider = generic
