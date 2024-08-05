@@ -16,6 +16,7 @@ vim.opt.tabstop = 2
 
 -- Line width and wrapping
 vim.bo.textwidth = 120
+vim.opt.textwidth = 120
 vim.wo.wrap = true
 
 -- Numbering and rulers

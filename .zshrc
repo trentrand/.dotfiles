@@ -6,6 +6,7 @@ export IP=`ifconfig en0 | grep inet | awk '$1=="inet" {print $2}'`
 # Enable 8-bit color themes (actual theme set in Alacritty configuration)
 export TERM=xterm-256color
 ZSH_THEME="" # actual theme set iun
+export PATH="/Applications/Alacritty.app/Contents/MacOS:$PATH"
 
 # Install ZSH plugins with git submodules, no need for a plugin manager!
 export ZSH_PLUGINS=$HOME/.dotfiles/plugins/zsh
@@ -49,12 +50,19 @@ fpath+=$ZSH_PLUGINS/pure
 autoload -U promptinit; promptinit
 prompt pure
 
+export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/.homebrew/bin:$PATH"
+
 # Import credentials as environment variables
 source ~/.credentials
 
 # Specify bin for default text editors, referenced by various programs and scripts
 export EDITOR=vim
 export REACT_EDITOR=vim
+
+alias vi='. ~/nvim-fg-or-new.sh'
+alias vim=nvim
+alias lvim=nvim
 
 # TODO: No longer needed after specifying id_rsa reference in ~/.ssh/config?
 # SSH configuration
@@ -68,9 +76,13 @@ export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
 export PNPM_HOME="/Users/trand/Library/pnpm"
 export PATH=$PNPM_HOME:$PATH
 
+# deno
+export DENO_INSTALL="/Users/trand/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
 # Default command overwrites 😬
 alias cat="bat"
-alias ls="exa"
+# alias ls="exa"
 
 # Time Machine
 alias timemachine-fast-mode="sudo sysctl debug.lowpri\_throttle_enabled=0"
@@ -114,12 +126,7 @@ export YDIFF_OPTIONS="--width 0 --side-by-side"
 #   --preview "bat --color=always --style=header,grid --line-range :300 {}"
 # '
 
-
-# Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=~/.npm-global/bin:$PATH
+alias ai=shai
 
 autoload -U add-zsh-hook
 # switch node version automatically when working directory has a .nvmrc file
@@ -157,24 +164,24 @@ export PATH=/usr/X11/bin/xhost:$PATH # X11 xhost: https://www.xquartz.org/
 export DRONE_SERVER=https://drone.squarespace.net
 # export DRONE_TOKEN=$(security find-generic-password -a ${DEFAULT_USER} -s DRONE_TOKEN -w)
 
-# Virtualenvwrapper
-export WORKON_HOME=$HOME/.virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=/opt/homebrew/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
-source /usr/local/bin/virtualenvwrapper.sh
-
 # Site-server local
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin:$PATH
 # export PATH=/Library/Developer/CommandLineTools/usr/bin:$PATH
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-export PATH=$HOME/squarespace/generated/bin:$PATH
 export CPATH=`xcrun --show-sdk-path`/usr/include
-source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export PATH=$HOME/squarespace/generated/bin:$PATH
+# Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+export PATH=~/.npm-global/bin:$PATH
 
 # Grant larger memory allocation limit to NodeJS
 export NODE_OPTIONS=--max_old_space_size=6144 # 6GB
+
+# C language
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 # GNU Bin Utils
 # PATH=/usr/local/opt/binutils/bin:$PATH
@@ -202,6 +209,9 @@ export PATH=~/Developer/personal/xtensa-esp32-elf/bin:$PATH
 export ESPPORT=/dev/cu.usbserial-0001
 alias get_idf='. $HOME/Developer/personal/esp-idf/export.sh'
 
+# QMK
+export PATH=/opt/homebrew/opt/avr-gcc@8/bin:$PATH
+
 # MTA Arrival Times project configuration
 if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
 if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/completion.zsh.inc'; fi
@@ -222,26 +232,22 @@ alias Developer='cd ~/Developer'
     alias GitYank="cd ~/Developer/personal/git-yank"
 
   alias Work='cd ~/Developer/work'
-    alias CC="cd ~/Developer/work/core-components"
-    alias Eight="cd ~/Developer/work/eight"
+    alias Rosetta="cd ~/Developer/work/core-components"
     alias Jsf="cd ~/Developer/work/Jsf"
     alias Rte="cd ~/Developer/work/rte"
       alias RteCore="cd ~/Developer/work/rte/rte-core"
       alias RteReact="cd ~/Developer/work/rte/rte-react"
-    alias SectionRenderer="cd ~/Developer/work/section-renderer"
-    alias SectionPortal="cd ~/Developer/work/section-controller-portal"
-    alias UBE="cd ~/Developer/work/block-schemas"
-    alias V6="cd ~/Developer/work/squarespace-v6"
     alias NBF="cd ~/Developer/work/new-bedford-framework"
-    alias FrontendPackages="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/packages"
-    alias VisitorForms="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/website/visitor-forms"
+    alias V6="cd ~/Developer/work/squarespace-v6"
       alias Aux="cd ~/Developer/work/squarespace-v6/aux-server"
-      alias Site="cd ~/Developer/work/config-frontend/site-server"
-        alias Universal="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal"
-          alias App="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App"
-          alias Frame="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/Frame"
-          alias ContentBrowser="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App/screens/ContentBrowser"
-          alias ConfigWebsite="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/ConfigWebsite"
+    alias CF="cd ~/Developer/work/config-frontend"
+    alias Site="cd ~/Developer/work/config-frontend"
+      alias FrontendPackages="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/packages"
+        alias VisitorForms="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/frontend/website/visitor-forms"
+      alias Universal="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal"
+        alias App="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App"
+        alias ContentBrowser="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/App/screens/ContentBrowser"
+        alias ConfigWebsite="cd ~/Developer/work/config-frontend/site-server/src/main/webapp/universal/src/apps/ConfigWebsite"
 
 # Aliases for common Site Server V6 development processes
 alias startproxy='cd ~/Developer/work/site-server-proxy && npm run start';
@@ -301,6 +307,10 @@ fixLockfiles() {
   npm run rush update;
 }
 
+resetJamf() {
+  sudo /usr/local/bin/authchanger -reset -JamfConnect
+}
+
 # Re-run a command until it returns -1
 retryUntilFailure() {
   while "$@"; do :; done
@@ -319,6 +329,8 @@ printColors() {
 # Recursively delete all .DS_Store files in the current working directory
 alias delete-dsstore="find . -name '.DS_Store' -type f -delete"
 
+alias close-notifications="killall NotificationCenter"
+
 # Attach to tmux session of Ubuntu remote virtual machine
 attachVm() {
 	ssh trent@trent-VirtualBox.local -t tmux new-session -A -s vm
@@ -336,3 +348,17 @@ vpn-status() {
 export GIT_HOME=/Users/trand/Developer/work
 alias assetspub="cd $GIT_HOME/assets/packages/asset-common && yalc publish && cd ../asset-picker && yalc publish && cd ../asset-uploader && yalc publish && cd ../asset-library && yalc publish && cd ../.."
 alias assetslink="cd $GIT_HOME/config-frontend/site-server/src/main/webapp/universal/ && yalc link @sqs/asset-common && yalc link @sqs/asset-picker && yalc link @sqs/asset-uploader && yalc link @sqs/asset-library && cd $GIT_HOME/config-frontend/site-server"
+
+
+export STM32_PRG_PATH=/Applications/STMicroelectronics/STM32Cube/STM32CubeProgrammer/STM32CubeProgrammer.app/Contents/MacOs/bin
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/trand/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# bun completions
+[ -s "/Users/trand/.bun/_bun" ] && source "/Users/trand/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

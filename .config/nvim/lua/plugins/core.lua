@@ -10,4 +10,5 @@ return {
       colorscheme = "everforest",
     },
   },
+  { "nvim-telescope/telescope-live-grep-args.nvim" },
 }

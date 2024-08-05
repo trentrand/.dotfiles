@@ -11,10 +11,26 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- import any extras modules here
-    -- { import = "lazyvim.plugins.extras.lang.typescript" },
-    -- { import = "lazyvim.plugins.extras.lang.json" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
-    -- import/override with your plugins
+    {
+      "echasnovski/mini.move",
+      opts = {
+        mappings = {
+          left = "<C-h>",
+          right = "<C-l>",
+          down = "<C-j>",
+          up = "<C-k>",
+
+          line_left = "<C-h>",
+          line_right = "<C-l>",
+          line_down = "<C-j>",
+          line_up = "<C-k>",
+        },
+
+        options = {
+          reindent_linewise = true,
+        },
+      },
+    },
     { import = "plugins" },
   },
   defaults = {
